@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thread/screens/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,6 +16,35 @@ class _LoginScreenState extends State<SignupScreen> {
    final passwordController=TextEditingController();
   final nameController=TextEditingController();
  final usernameController=TextEditingController();
+
+  Future<void> register() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim());
+
+      String userId = userCredential.user!.uid;
+
+      await FirebaseFirestore.instance.collection('users').doc(userId).set(
+        {
+          'id': userId,
+          'name': nameController.text,
+          'username': usernameController.text,
+          'following': [],
+          'followers': [],
+        },
+      );
+
+      if (mounted) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
+    } catch (e) {
+      print("Error: ${e.toString()}");
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,10 +165,7 @@ class _LoginScreenState extends State<SignupScreen> {
               children: [
                const Text("Already have An Account?"),
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder:
-                     (context)=>const LoginScreen()),);
-                  },
+                  onPressed: register,
                 child: const Text("Login",
                  style: TextStyle(fontWeight: FontWeight.bold,
                  color: Colors.black),

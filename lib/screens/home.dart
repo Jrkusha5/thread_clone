@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:thread/screens/favorite.dart';
 import 'package:thread/screens/feed.dart';
 import 'package:thread/screens/post.dart';
+import 'package:thread/screens/profile.dart';
 import 'package:thread/screens/search.dart';
 
 class Home extends StatefulWidget {
@@ -17,8 +19,8 @@ class _HomeState extends State<Home> {
      const FeedScreen(),
      const SearchScreen(),
      const PostScreen(),
-     const Text('Post'),
-     const Text('Post'),
+     const FavoriteScreen(),
+     const ProfileScreen(),
     ];
   @override
 
